@@ -1,0 +1,21 @@
+app_version: "1.0.0"
+capabilities: []
+categories:
+  - productivity
+  description: Gym & bodyweight tracker. Plan workouts, guided sessions, body weight log — passkey auth, no external services.
+  home: https://github.com/arvids-unavailable/openGym
+  host_mounts: []
+  icon: https://raw.githubusercontent.com/arvids-unavailable/openGym/main/frontend/public/icon-192.png
+  keywords:
+    - gym
+      - fitness
+        - workout
+        maintainers: []
+        name: opengym
+        run_as_context: []
+        screenshots: []
+        sources:
+          - https://github.com/arvids-unavailable/openGym
+          title: openGym
+          train: stable
+          version: "1.0.0"
