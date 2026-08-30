@@ -1,0 +1,51 @@
+name: opengym
+
+services:
+  media:
+    image: alpine/git
+    restart: "no"
+    volumes:
+      - media_img:/out/img
+      - media_gif:/out/gif
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ -z "$(ls -A /out/img 2>/dev/null)" ]; then
+          git clone --depth 1 https://github.com/hasaneyldrm/exercises-dataset /tmp/ds
+          cp /tmp/ds/images/*.jpg /out/img/
+          cp /tmp/ds/videos/*.gif /out/gif/
+        fi
+
+  api:
+    image: ghcr.io/duartesantos8/opengym-api:latest
+    restart: unless-stopped
+    environment:
+      PORT: "3000"
+      DATA_DIR: /data
+      RP_ID: localhost
+      ORIGIN: http://localhost:8080
+      RP_NAME: openGym
+      ADMIN_UIDS: ""
+      INVITE_ONLY: ""
+    volumes:
+      - app_data:/data
+    depends_on:
+      media:
+        condition: service_completed_successfully
+
+  web:
+    image: ghcr.io/duartesantos8/opengym-web:latest
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - media_img:/usr/share/nginx/html/img:ro
+      - media_gif:/usr/share/nginx/html/gif:ro
+    depends_on:
+      api:
+        condition: service_started
+
+volumes:
+  app_data:
+  media_img:
+  media_gif:
